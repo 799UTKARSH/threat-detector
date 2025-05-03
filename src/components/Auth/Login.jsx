@@ -1,11 +1,47 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, TextField, Button, Typography, Paper, CircularProgress, Link } from '@mui/material';
+import { 
+  Box, 
+  TextField, 
+  Button, 
+  Typography, 
+  Paper, 
+  CircularProgress, 
+  Link,
+  Divider,
+  IconButton,
+  InputAdornment,
+  Fade
+} from '@mui/material';
+import { 
+  Visibility, 
+  VisibilityOff,
+  Login as LoginIcon
+} from '@mui/icons-material';
 import authService from '../../services/authService';
+import { styled } from '@mui/material/styles';
+
+const AuthPaper = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(4),
+  maxWidth: 450,
+  margin: 'auto',
+  marginTop: theme.spacing(8),
+  borderRadius: theme.shape.borderRadius * 2,
+  boxShadow: theme.shadows[10],
+  background: theme.palette.background.paper,
+}));
+
+const AuthButton = styled(Button)(({ theme }) => ({
+  marginTop: theme.spacing(3),
+  padding: theme.spacing(1.5),
+  borderRadius: theme.shape.borderRadius,
+  fontWeight: 600,
+}));
 
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -19,62 +55,110 @@ const Login = () => {
             await authService.login(username, password);
             navigate('/dashboard');
         } catch (err) {
-            setError(err.response?.data?.error || 'Login failed');
+            setError(err.response?.data?.error || 'Login failed. Please check your credentials.');
         } finally {
             setLoading(false);
         }
     };
     
+    const handleTogglePassword = () => {
+        setShowPassword(!showPassword);
+    };
+    
     return (
-        <Paper elevation={3} sx={{ p: 4, maxWidth: 400, mx: 'auto', mt: 8 }}>
-            <Typography variant="h5" gutterBottom align="center">
-                Login
-            </Typography>
+        <AuthPaper>
+            <Box textAlign="center" mb={3}>
+                <Typography variant="h4" component="h1" fontWeight="bold" color="primary">
+                    Welcome Back
+                </Typography>
+                <Typography variant="subtitle1" color="text.secondary">
+                    Sign in to continue to your account
+                </Typography>
+            </Box>
             
             {error && (
-                <Typography color="error" align="center" sx={{ mb: 2 }}>
-                    {error}
-                </Typography>
+                <Fade in={!!error}>
+                    <Typography 
+                        color="error" 
+                        align="center" 
+                        sx={{ mb: 2, p: 1.5, bgcolor: 'error.light', borderRadius: 1 }}
+                    >
+                        {error}
+                    </Typography>
+                </Fade>
             )}
             
-            <Box component="form" onSubmit={handleSubmit}>
+            <Box component="form" onSubmit={handleSubmit} noValidate>
                 <TextField
                     fullWidth
-                    label="Username"
+                    label="Username or Email"
                     variant="outlined"
                     margin="normal"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     required
+                    autoFocus
+                    sx={{ mb: 2 }}
+                    InputProps={{
+                        style: { borderRadius: 12 }
+                    }}
                 />
                 
                 <TextField
                     fullWidth
                     label="Password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     variant="outlined"
                     margin="normal"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    sx={{ mb: 1 }}
+                    InputProps={{
+                        style: { borderRadius: 12 },
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={handleTogglePassword}
+                                    edge="end"
+                                >
+                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
                 />
                 
-                <Button
+                <Box textAlign="right" mb={2}>
+                    <Link href="/forgot-password" variant="body2" color="text.secondary">
+                        Forgot password?
+                    </Link>
+                </Box>
+                
+                <AuthButton
                     fullWidth
                     type="submit"
                     variant="contained"
-                    color="primary"
-                    sx={{ mt: 3 }}
+                    size="large"
                     disabled={loading}
+                    startIcon={!loading && <LoginIcon />}
                 >
-                    {loading ? <CircularProgress size={24} /> : 'Login'}
-                </Button>
+                    {loading ? <CircularProgress size={24} color="inherit" /> : 'Sign In'}
+                </AuthButton>
                 
-                <Typography sx={{ mt: 2, textAlign: 'center' }}>
-                    Don't have an account? <Link href="/register">Register</Link>
-                </Typography>
+                <Divider sx={{ my: 3 }}>OR</Divider>
+                
+                <Box textAlign="center" mt={2}>
+                    <Typography variant="body2" color="text.secondary">
+                        Don't have an account?{' '}
+                        <Link href="/register" color="primary" fontWeight="medium">
+                            Sign up
+                        </Link>
+                    </Typography>
+                </Box>
             </Box>
-        </Paper>
+        </AuthPaper>
     );
 };
 

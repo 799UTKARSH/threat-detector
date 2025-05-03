@@ -1,5 +1,5 @@
 import React, {  useEffect } from 'react';
-import { ScanContext } from '../context/ScanContext';
+// import { ScanContext } from '../context/ScanContext';
 import ScanHistory from '../components/ScanHistory';
 import '../styles/dashboard.css';
 import { useAuth } from '../context/AuthContext';
