@@ -1,0 +1,61 @@
+.scanner-container {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+  
+  .scanner-input {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .scanner-input input {
+    flex: 1;
+  }
+  
+  .scan-result {
+    padding: 15px;
+    border-radius: 4px;
+    margin-top: 15px;
+  }
+  
+  .scan-result.allow {
+    background-color: #d4edda;
+    border-left: 4px solid #28a745;
+  }
+  
+  .scan-result.block {
+    background-color: #f8d7da;
+    border-left: 4px solid #dc3545;
+  }
+  
+  .scan-result.flag {
+    background-color: #fff3cd;
+    border-left: 4px solid #ffc107;
+  }
+  
+  .scan-result.log {
+    background-color: #d1ecf1;
+    border-left: 4px solid #17a2b8;
+  }
+  
+  .features {
+    margin-top: 15px;
+  }
+  
+  .features ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .features li {
+    margin-bottom: 8px;
+  }
+  
+  .features strong {
+    display: inline-block;
+    width: 150px;
+  }
