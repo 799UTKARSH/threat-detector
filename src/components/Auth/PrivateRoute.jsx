@@ -4,7 +4,9 @@ import { useAuth } from '../../context/AuthContext';
 
 const PrivateRoute = ({ children }) => {
   const { currentUser } = useAuth();
-  return currentUser ? children : <Navigate to="/login" />;
+  const token = localStorage.getItem('token');
+  // return token ? children : <Navigate to="/login" replace />;
+  return currentUser ? children : <Navigate to="/login" replace />;
 };
 
 export default PrivateRoute;

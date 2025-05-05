@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/detect';
+const API_URL = 'http://localhost:5000/api/scans';
 
 const scanURL = async (url, userId = null) => {
     const response = await axios.post(`${API_URL}/url`, {
@@ -31,8 +31,19 @@ const scanPDF = async (file, userId = null) => {
     return response.data;
 };
 
+const getHistory = async (userId) => {
+    const response = await axios.get(`${API_URL}/history`, {
+      params: { userId },
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+    return response.data;
+  };
+
 export default {
     scanURL,
     scanIP,
-    scanPDF
+    scanPDF,
+    getHistory
 };

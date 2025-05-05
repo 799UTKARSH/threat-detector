@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { login } from '../../services/authService';
 import { 
   Box, 
   TextField, 
@@ -45,6 +46,10 @@ const Login = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        email: '',
+        password: ''
+      });
     
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -52,10 +57,25 @@ const Login = () => {
         setLoading(true);
         
         try {
-            await authService.login(username, password);
-            navigate('/dashboard');
+            const response = await authService.login(username, password);
+            
+            // Debug log to verify response
+            console.log('Login response:', response);
+             // Store token and user data
+            localStorage.setItem('token', response.access_token);
+            localStorage.setItem('user', JSON.stringify(response.user));
+            
+            // Force refresh and redirect
+            window.location.href = '/Scanner';
+
+            
         } catch (err) {
-            setError(err.response?.data?.error || 'Login failed. Please check your credentials.');
+            // Enhanced error handling
+            const errorMsg = err.response?.data?.error || 
+                           err.message || 
+                           'Login failed. Please check your details.';
+            setError(errorMsg);
+            console.error('Login error:', err);
         } finally {
             setLoading(false);
         }
